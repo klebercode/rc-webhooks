@@ -19,9 +19,9 @@ function getProject(projectId) {
 
 class Script {
   process_incoming_request({request}) {
-    const action = request.action;
+    const action = request.content.action;
 
-    if (action == "triggered") {
+    if (action == "triggered" || action == "created") {
       const data = request.content.data;
       let event = null;
       let project = null;
