@@ -19,44 +19,48 @@ function getProject(projectId) {
 
 class Script {
   process_incoming_request({request}) {
-    const data = request.content.data;
-    let event = null;
-    let project = null;
-    let title = null;
-    let culprit = null;
-    let issueUrl = null;
+    const action = request.action;
 
-    try {
-      if ("event" in data) {
-        event = data.event;
-        project = event.project;
-        title = event.title;
-        culprit = event.culprit;
-        issueUrl = event.web_url;
-      };
+    if (action == "triggered") {
+      const data = request.content.data;
+      let event = null;
+      let project = null;
+      let title = null;
+      let culprit = null;
+      let issueUrl = null;
 
-      if ("issue" in data) {
-        issue = data.issue;
-        title = issue.title;
-        culprit = issue.culprit;
-        // project = `${issue.project.slug} (${issue.project.id})`;
-        project = issue.project.id;
-        issueUrl = `https://ow7.sentry.io/issues/${issue.id}/`;
-      };
+      try {
+        if ("event" in data) {
+          event = data.event;
+          project = event.project;
+          title = event.title;
+          culprit = event.culprit;
+          issueUrl = event.web_url;
+        };
 
-      return {
-        content: {
-          text: `Error in project *${getProject(project)}*.\n*Title:* ${title}\n*Culprit*: ${culprit}\n*Issue:* ${issueUrl}`
-        }
-      };
-    } catch (e) {
-      console.log('sentryevent error', e);
-      return {
-        error: {
-          success: false,
-          message: `${e.message || e} ${JSON.stringify(data)}`
-        }
-      };
+        if ("issue" in data) {
+          issue = data.issue;
+          title = issue.title;
+          culprit = issue.culprit;
+          // project = `${issue.project.slug} (${issue.project.id})`;
+          project = issue.project.id;
+          issueUrl = `https://ow7.sentry.io/issues/${issue.id}/`;
+        };
+
+        return {
+          content: {
+            text: `Error in project *${getProject(project)}*.\n*Title:* ${title}\n*Culprit*: ${culprit}\n*Issue:* ${issueUrl}`
+          }
+        };
+      } catch (e) {
+        console.log('sentryevent error', e);
+        return {
+          error: {
+            success: false,
+            message: `${e.message || e} ${JSON.stringify(data)}`
+          }
+        };
+      }
     }
   }
 }
