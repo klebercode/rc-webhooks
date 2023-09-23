@@ -25,7 +25,7 @@ class Script {
       const data = request.content.data;
       let event = null;
       let project = null;
-      let title = null;
+      let message = null;
       let culprit = null;
       let issueUrl = null;
 
@@ -33,14 +33,14 @@ class Script {
         if ("event" in data) {
           event = data.event;
           project = event.project;
-          title = event.title;
+          message = event.title;
           culprit = event.culprit;
           issueUrl = event.web_url;
         };
 
         if ("issue" in data) {
           issue = data.issue;
-          title = issue.title;
+          message = issue.title;
           culprit = issue.culprit;
           // project = `${issue.project.slug} (${issue.project.id})`;
           project = issue.project.id;
@@ -49,7 +49,7 @@ class Script {
 
         return {
           content: {
-            text: `Error in project *${getProject(project)}*.\n*Title:* ${title}\n*Culprit*: ${culprit}\n*Issue:* ${issueUrl}`
+            text: `Error in project *${getProject(project)}*.\n*Message:* ${message}\n*Culprit*: ${culprit}\n*Issue:* ${issueUrl}`
           }
         };
       } catch (e) {
