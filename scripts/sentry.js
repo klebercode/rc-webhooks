@@ -42,7 +42,6 @@ class Script {
           issue = data.issue;
           message = issue.title;
           culprit = issue.culprit;
-          // project = `${issue.project.slug} (${issue.project.id})`;
           project = issue.project.id;
           issueUrl = `https://ow7.sentry.io/issues/${issue.id}/`;
         };
